@@ -25,14 +25,39 @@ def get_data(url, string = '', limit = 151, offset = 0):
 
 
 pokedex = get_data(url)
-pokemon_stats = get_data(url, 'moltres')
 
+#given a url, pokemon name as inputs, connect to api & return data about that pokemon
+def get_pokemon_stats(pokemon_name):
+    return get_data(url, pokemon_name)
+
+#given a pokemon_name, retrive weight, type & ability. Then return a dicitonary of info for pokemon.
+def stat_package(pokemon_name):
+    output = {}
+    output['name'] = pokemon_name
+    output['weight'] = get_pokemon_stats(pokemon_name)['weight']
+    output['type'] = {}
+    output['ability'] = {}
+
+    for i, type in enumerate(get_pokemon_stats(pokemon_name)['types']):
+        output['type'][i] = type['type']['name']
+
+    for i, ability in enumerate(get_pokemon_stats(pokemon_name)['abilities']):
+        output['ability'][i] = ability['ability']['name']
+
+    return output
+
+
+print(stat_package('moltres'))
 
 #print(pokedex)
 #print(pokemon_stats)
-print(pokemon_stats['types'])
-print(pokemon_stats['weight'])
-print(pokemon_stats['abilities'])
+#or type in get_pokemon_stat('moltres')['types']:
+    #print(type['type']['name'])
+#print(get_pokemon_stats('moltres')['types'])
+#print(get_pokemon_stat('moltres')['weight'])
+#for ability in get_pokemon_stat('moltres')['abilities']:
+    #print(ability['ability']['name'])
+#print(get_pokemon_stats('moltres')['abilities'])
 #print(pokedex['results'])
 
 output = []
