@@ -32,7 +32,7 @@ poke_data = get_data(url)
 #print(poke_data)
 #print(poke_data['results'])
 
-#given a url, pokemon name as inputs, connect to api & return data about that pokemon
+#given pokemon name as inputs connect to api & return data about that pokemon
 def get_pokemon_stats(pokemon_name):
     return get_data(url, pokemon_name)
 
@@ -52,13 +52,13 @@ def stat_package(pokemon_name):
 
     return output
 
-
-##print(stat_package('moltres'))
+########pokemon_info retrieval test#######
+#print(stat_package('moltres'))
 #print(stat_package('moltres')['type'])
 #for type in stat_package('moltres')['type']:
 #   print(stat_package('moltres')['type'][type])
 
-
+#given pokemon_api data as input, return a list of pokemon
 def pokedex(poke_data):
     pokedex = []
     for pokemon in poke_data['results']:
@@ -66,24 +66,10 @@ def pokedex(poke_data):
     return pokedex
 
 pokedex = pokedex(poke_data)
-
+#test for pokedex variable#
 #for i,  pokemon in enumerate(pokedex['results']):
     #print(pokemon['name'], i+1)
 
-
-#random.randint(0, )
-
-
-#define using pokemon_api, pokemon as inputs; use string concat and variable to ouput url for a specific pokemon
-#def poke_name_url(url, pokemon_name):
- #   return f'url' + str(pokemon_name)
-
-#def using pokemon_api as an input, retrieve  of all pokemon names from pokemon_api using limiters, outputs a list pokemon_names
-    #define pokemon_api url for all pokemon
-
-#for pokemon in pokedex:
- #   list.append()
-#def retrieve type, name, abilities, weight
 
 #def using pokemon_names as an input; 20 as default input of amount of pokemon names returned,  return a list of 20 pokemon names
 def random_poke_list(list, no_of_poke = 20):
@@ -134,6 +120,31 @@ def pokemon_collection(types, poke_list):
     #print(end - start)
     return pokemon_collection
 
-print(pokemon_collection(types, poke_list))
+#given a list of pokemon, create a dictionary of pokemon where the key is type
+def pokemon_collection_faster(poke_list):
+    start = time.time()
+    pokemon_collection = {}
 
-#create a dictionary of pokemon by type: {name:  {ablities: [], weight:}
+    for pokemon in poke_list:
+        for this_pokemons_type in stat_package(pokemon)['type'].values():
+                    
+            if this_pokemons_type not in pokemon_collection.keys():
+                ability_weight = {}
+                ability_weight['abilities'] = [(stat_package(pokemon)['ability'][value]) for value in stat_package(pokemon)['ability']]
+                ability_weight['weight'] = stat_package(pokemon)['weight']
+                poke_stats = {}
+                poke_stats[stat_package(pokemon)['name']] = ability_weight
+                pokemon_collection[this_pokemons_type] = poke_stats
+                                                        
+            else:
+                ability_weight = {}
+                ability_weight['abilities'] = [(stat_package(pokemon)['ability'][value]) for value in stat_package(pokemon)['ability']]
+                ability_weight['weight'] = stat_package(pokemon)['weight']
+                pokemon_collection[this_pokemons_type][stat_package(pokemon)['name']] = ability_weight
+
+    end = time.time()
+    #print(end - start)
+    return pokemon_collection
+
+print(pokemon_collection_faster(poke_list))
+
